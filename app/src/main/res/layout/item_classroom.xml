@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <!-- Color Badge -->
+        <TextView
+            android:id="@+id/tvSubjectIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/circle_bg" />
+
+        <!-- Subject Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="14dp">
+
+            <TextView
+                android:id="@+id/tvSubjectName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mathematics"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A2E" />
+
+            <TextView
+                android:id="@+id/tvTeacherName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prof. Sharma"
+                android:textSize="12sp"
+                android:textColor="#6B7280"
+                android:layout_marginTop="2dp" />
+
+            <TextView
+                android:id="@+id/tvClassCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Code: MATH01"
+                android:textSize="11sp"
+                android:textColor="#9CA3AF"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Attendance % -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvAttendancePercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="88%"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#4F46E5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="attended"
+                android:textSize="10sp"
+                android:textColor="#9CA3AF" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Bottom progress bar -->
+    <ProgressBar
+        android:id="@+id/progressAttendance"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_gravity="bottom"
+        android:max="100"
+        android:progress="88"
+        android:progressTint="#4F46E5"
+        android:progressBackgroundTint="#E0E7FF" />
+
+</androidx.cardview.widget.CardView>

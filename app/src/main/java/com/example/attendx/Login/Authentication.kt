@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.attendx.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-
+                                                                           //conntected to activity_role
 class Role : AppCompatActivity() {
 
     private lateinit var tilRollNumber: TextInputLayout
@@ -28,11 +28,7 @@ class Role : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_role)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
 
         initViews()
         setupListeners()
@@ -69,7 +65,7 @@ class Role : AppCompatActivity() {
         val rollNumber = etRollNumber.text.toString().trim()
         val password = etPassword.text.toString().trim()
         var isValid = true
-
+//.error se red color me show hone lagege invalid
         if (rollNumber.isEmpty()) { tilRollNumber.error = "Roll number / User ID is required"; isValid = false }
         else tilRollNumber.error = null
 
