@@ -21,7 +21,6 @@
             android:paddingTop="48dp"
             android:paddingBottom="20dp">
 
-            <!-- Greeting -->
             <TextView
                 android:id="@+id/tvGreeting"
                 android:layout_width="0dp"
@@ -58,7 +57,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/ivAvatar" />
 
-            <!-- Avatar -->
             <TextView
                 android:id="@+id/ivAvatar"
                 android:layout_width="48dp"
@@ -71,11 +69,12 @@
                 android:background="@drawable/circle_white_bg"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
+
 
     <!-- Scrollable Content -->
     <androidx.core.widget.NestedScrollView
@@ -90,195 +89,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Stats Row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="4dp">
-
-                <!-- Overall Attendance Card -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="#FFFFFF">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/tvOverallPercent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="84%"
-                            android:textSize="32sp"
-                            android:textStyle="bold"
-                            android:textColor="#4F46E5" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Overall"
-                            android:textSize="11sp"
-                            android:textColor="#9CA3AF"
-                            android:layout_marginTop="2dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Attendance"
-                            android:textSize="11sp"
-                            android:textColor="#9CA3AF" />
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Classes Joined / Present / Absent -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <!-- Present + Absent -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="0dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="8dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="4dp"
-                            app:cardBackgroundColor="#ECFDF5">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:padding="12dp"
-                                android:gravity="center">
-
-                                <TextView
-                                    android:id="@+id/tvPresentCount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="42"
-                                    android:textSize="22sp"
-                                    android:textStyle="bold"
-                                    android:textColor="#059669" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Present"
-                                    android:textSize="11sp"
-                                    android:textColor="#6EE7B7" />
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginBottom="8dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="4dp"
-                            app:cardBackgroundColor="#FEF2F2">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:padding="12dp"
-                                android:gravity="center">
-
-                                <TextView
-                                    android:id="@+id/tvAbsentCount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="8"
-                                    android:textSize="22sp"
-                                    android:textStyle="bold"
-                                    android:textColor="#DC2626" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Absent"
-                                    android:textSize="11sp"
-                                    android:textColor="#FCA5A5" />
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
-
-                    </LinearLayout>
-
-                    <!-- Classrooms joined -->
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="0dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="#EEF2FF">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:padding="12dp"
-                            android:gravity="center_vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="🏫"
-                                android:textSize="20sp" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_marginStart="10dp">
-
-                                <TextView
-                                    android:id="@+id/tvClassroomCount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="6 Classes"
-                                    android:textSize="15sp"
-                                    android:textStyle="bold"
-                                    android:textColor="#4F46E5" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Enrolled"
-                                    android:textSize="11sp"
-                                    android:textColor="#818CF8" />
-                            </LinearLayout>
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Scan QR Button -->
+            <!-- Scan QR Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -310,7 +121,7 @@
                             android:layout_height="wrap_content"
                             android:text="▦"
                             android:textSize="28sp"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -326,7 +137,7 @@
                             android:text="Scan QR Code"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -334,7 +145,7 @@
                             android:text="Mark attendance or join a class"
                             android:textSize="13sp"
                             android:textColor="#C7D2FE"
-                            android:layout_marginTop="2dp" />
+                            android:layout_marginTop="2dp"/>
                     </LinearLayout>
 
                     <TextView
@@ -342,52 +153,84 @@
                         android:layout_height="wrap_content"
                         android:text="›"
                         android:textSize="28sp"
-                        android:textColor="#C7D2FE" />
-
+                        android:textColor="#C7D2FE"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- My Classrooms Section -->
-            <LinearLayout
+
+            <!-- Join Class Card -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="20dp"
-                android:paddingTop="24dp"
-                android:paddingBottom="12dp"
-                android:gravity="center_vertical">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="#10B981">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/btnJoinClass"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="My Classrooms"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:textColor="#1A1A2E" />
-
-                <TextView
-                    android:id="@+id/tvSeeAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="See all"
-                    android:textSize="13sp"
-                    android:textColor="#4F46E5"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical"
                     android:clickable="true"
-                    android:focusable="true" />
-            </LinearLayout>
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
 
-            <!-- Classroom List -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvClassrooms"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false" />
+                    <LinearLayout
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:gravity="center"
+                        android:background="@drawable/circle_white_alpha_bg">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+"
+                            android:textSize="28sp"
+                            android:textColor="#FFFFFF"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Join Class"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Enter a class code to join"
+                            android:textSize="13sp"
+                            android:textColor="#D1FAE5"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textSize="28sp"
+                        android:textColor="#D1FAE5"/>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
+
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -399,6 +242,6 @@
         app:elevation="16dp"
         app:itemIconTint="@color/bottom_nav_selector"
         app:itemTextColor="@color/bottom_nav_selector"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

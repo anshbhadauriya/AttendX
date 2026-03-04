@@ -2,6 +2,7 @@ package com.example.attendx.Home
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -15,18 +16,27 @@ import com.google.zxing.integration.android.IntentIntegrator
 import java.util.Calendar
 
 class StudentHomeActivity : AppCompatActivity() {
+    private lateinit var joinClass : LinearLayout
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_student_home)
 
+        initialize()
         setupGreeting()
-//        setupStats()
-//        setupClassrooms()
         setupScanButton()
         setupBottomNav()
+        setupJoinClassButton()
+
     }
+
+    private fun initialize(){
+        joinClass=findViewById(R.id.btnJoinClass)
+    }
+
+
 
     private fun setupGreeting() {
         val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
@@ -45,40 +55,7 @@ class StudentHomeActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.ivAvatar).text = studentName.first().uppercase()
     }
 
-//    private fun setupStats() {
-//        // TODO: Replace with real data from your DB/API
-//        val present = 42
-//        val absent = 8
-//        val total = present + absent
-//        val percent = if (total > 0) (present * 100) / total else 0
-//
-//        findViewById<TextView>(R.id.tvOverallPercent).text = "$percent%"
-//        findViewById<TextView>(R.id.tvPresentCount).text = "$present"
-//        findViewById<TextView>(R.id.tvAbsentCount).text = "$absent"
-//        findViewById<TextView>(R.id.tvClassroomCount).text = "6 Classes"
-//    }
 
-//    private fun setupClassrooms() {
-//        // Sample data — replace with real DB/API data
-//        val classrooms = listOf(
-//            Classroom("Mathematics",   "Prof. Sharma",  "MATH01", 88, "#4F46E5"),
-//            Classroom("Physics",       "Dr. Mehta",     "PHY02",  72, "#7C3AED"),
-//            Classroom("Data Structures","Ms. Gupta",    "DS03",   95, "#0891B2"),
-//            Classroom("English",       "Mr. Khan",      "ENG04",  60, "#D97706"),
-//            Classroom("Chemistry",     "Dr. Singh",     "CHEM05", 80, "#059669"),
-//        )
-//
-//        findViewById<TextView>(R.id.tvClassroomCount).text = "${classrooms.size} Classes"
-//
-//        val rv = findViewById<RecyclerView>(R.id.rvClassrooms)
-//        rv.layoutManager = LinearLayoutManager(this)
-//        rv.adapter = ClassroomAdapter(classrooms) { classroom ->
-//            Toast.makeText(this, "Opened: ${classroom.subjectName}", Toast.LENGTH_SHORT).show()
-//            // TODO: val intent = Intent(this, ClassroomDetailActivity::class.java)
-//            //       intent.putExtra("classCode", classroom.classCode)
-//            //       startActivity(intent)
-//        }
-//    }
 
     private fun setupScanButton() {
 
@@ -134,6 +111,15 @@ class StudentHomeActivity : AppCompatActivity() {
             // TODO: send to Firebase to mark attendance
         }
     }
+
+    private fun setupJoinClassButton() {
+        joinClass.setOnClickListener {
+            Toast.makeText(this, "Opening ...", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, JoinClassActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
 
     private fun setupBottomNav() {
         findViewById<BottomNavigationView>(R.id.bottomNav)
