@@ -43,7 +43,11 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation("com.google.android.material:material:1.11.0")
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.fragment)
+    implementation(libs.play.services.maps)
     testImplementation(libs.junit)
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
