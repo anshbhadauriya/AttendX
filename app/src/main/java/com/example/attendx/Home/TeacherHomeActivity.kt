@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.attendx.R
 import android.widget.ImageView
+import com.google.firebase.firestore.FirebaseFirestore
 
 class TeacherHomeActivity : AppCompatActivity() {
 
@@ -16,12 +17,27 @@ class TeacherHomeActivity : AppCompatActivity() {
     private lateinit var savecode: Button
 
     private lateinit var enterCode: EditText
+    private val db = FirebaseFirestore.getInstance()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_teacher_home)
+
+        val data = hashMapOf(
+            "project" to "AttendX"
+        )
+
+        db.collection("test")
+            .document("demo")
+            .set(data)
+//            .addOnSuccessListener {
+//                Toast.makeText(this, "Firestore Connected!", Toast.LENGTH_SHORT).show()
+//            }
+//            .addOnFailureListener { e ->
+//                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+//            }
 
         initialize()
         loadSavedCode()
@@ -50,15 +66,35 @@ class TeacherHomeActivity : AppCompatActivity() {
         }
 
         savecode.setOnClickListener {
-//            Toast.makeText(this, "ShutUP...", Toast.LENGTH_SHORT).show()
 
-            val code=enterCode.text.toString()
+            val newCode = enterCode.text.toString()
+
             val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
-            val editor = sharedPref.edit()
-            editor.putString("class_code", code)      //saved to local memory
-            editor.apply()
+            val oldCode = sharedPref.getString("class_code", "")
 
-            Toast.makeText(this, "Class Code Saved", Toast.LENGTH_SHORT).show()
+            // Delete old class if exists
+            if (!oldCode.isNullOrEmpty() && oldCode != newCode) {
+                db.collection("classes")
+                    .document(oldCode)
+                    .delete()
+            }
+
+            // Save new class
+            val classData = hashMapOf(
+                "classCode" to newCode,
+                "teacherName" to "Ansh"
+            )
+
+            db.collection("classes")
+                .document(newCode)
+                .set(classData)
+
+            // Save locally
+            sharedPref.edit()
+                .putString("class_code", newCode)
+                .apply()
+
+            Toast.makeText(this, "Class Code Updated", Toast.LENGTH_SHORT).show()
         }
 
 

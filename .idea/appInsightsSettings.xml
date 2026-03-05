@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.attendx" />
+                  <option name="mobileSdkAppId" value="1:46762394816:android:59a7aa9a5f86523b259925" />
+                  <option name="projectId" value="attendx-4983d" />
+                  <option name="projectNumber" value="46762394816" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
