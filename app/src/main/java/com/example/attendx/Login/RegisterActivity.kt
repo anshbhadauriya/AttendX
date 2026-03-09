@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.attendx.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -46,6 +47,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var tilCourse: TextInputLayout
     private lateinit var etCourse: TextInputEditText
 
+    private lateinit var db: FirebaseFirestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,6 +59,7 @@ class RegisterActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        db = FirebaseFirestore.getInstance()
 
         role = intent.getStringExtra("role") ?: "student"
 
@@ -169,16 +173,63 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun performRegistration() {
-        val btn = findViewById<Button>(R.id.btnRegister)
-        btn.isEnabled = false
-        btn.text = "Creating Account..."
 
-        // TODO: Replace with real registration (Firebase, API, etc.)
-        btn.postDelayed({
-            btn.isEnabled = true
-            btn.text = "Create Account"
-            Toast.makeText(this, "Account created successfully! Please sign in.", Toast.LENGTH_LONG).show()
-            finish() // Go back to login
-        }, 1500)
+        val name = etName.text.toString().trim()
+        val userId = etUserId.text.toString().trim()
+        val phone = etPhone.text.toString().trim()
+        val password = etPassword.text.toString().trim()
+
+        val userMap = HashMap<String, Any>()
+
+        userMap["name"] = name
+        userMap["userId"] = userId
+        userMap["phone"] = phone
+        userMap["password"] = password
+        userMap["role"] = role
+
+        if (role == "teacher") {
+            userMap["subject"] = etSubject.text.toString().trim()
+            userMap["department"] = etDepartment.text.toString().trim()
+        } else {
+            userMap["class"] = etClass.text.toString().trim()
+            userMap["course"] = etCourse.text.toString().trim()
+        }
+
+        if(role=="teacher") {
+
+
+            db.collection("teachers")
+                .document(userId)
+                .set(userMap)
+                .addOnSuccessListener {
+
+                    Toast.makeText(this, "Account created successfully!", Toast.LENGTH_LONG).show()
+                    finish()
+
+                }
+                .addOnFailureListener {
+
+                    Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_LONG).show()
+
+                }
+        }
+        else{
+
+            db.collection("students")
+                .document(userId)
+                .set(userMap)
+                .addOnSuccessListener {
+
+                    Toast.makeText(this, "Account created successfully!", Toast.LENGTH_LONG).show()
+                    finish()
+
+                }
+                .addOnFailureListener {
+
+                    Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_LONG).show()
+
+                }
+
+        }
     }
 }

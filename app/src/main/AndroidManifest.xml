@@ -10,6 +10,9 @@
         <activity
             android:name=".Home.JoinClassActivity"
             android:exported="false" />
+        <activity
+            android:name=".Session.SessionActivity"
+            android:exported="false"/>
 
         <activity
             android:name=".Home.ViewClassActivity"
@@ -17,12 +20,12 @@
 
         <activity
             android:name=".Home.TeacherHomeActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false" >
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".Home.StudentHomeActivity"
@@ -40,10 +43,27 @@
             android:exported="false" />
         <activity
             android:name=".Login.SelectRoleActivity"
-            android:exported="false" />
+            android:exported="false">
+
+<!--                         <intent-filter>-->
+<!--                         <action android:name="android.intent.action.MAIN" />-->
+
+
+<!--                         <category android:name="android.intent.category.LAUNCHER" />-->
+<!--                         </intent-filter>-->
+
+        </activity>
         <activity
             android:name=".Login.Role"
-            android:exported="false" />
+            android:exported="true" >
+                         <intent-filter>
+                         <action android:name="android.intent.action.MAIN" />
+
+
+                         <category android:name="android.intent.category.LAUNCHER" />
+                         </intent-filter>
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="false" />
