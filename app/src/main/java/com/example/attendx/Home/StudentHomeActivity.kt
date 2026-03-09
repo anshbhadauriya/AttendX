@@ -12,11 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.attendx.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.integration.android.IntentIntegrator
 import java.util.Calendar
 
+data class JoinedClass(
+    val classCode: String = "",
+    val teacherName: String = ""
+)
+
 class StudentHomeActivity : AppCompatActivity() {
     private lateinit var joinClass : LinearLayout
+    private lateinit var recyclerClasses: RecyclerView
+    private val db = FirebaseFirestore.getInstance()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,11 +37,15 @@ class StudentHomeActivity : AppCompatActivity() {
         setupScanButton()
         setupBottomNav()
         setupJoinClassButton()
+        loadJoinedClasses()
 
     }
 
     private fun initialize(){
-        joinClass=findViewById(R.id.btnJoinClass)
+        joinClass = findViewById(R.id.btnJoinClass)
+        recyclerClasses = findViewById(R.id.recyclerClasses)
+
+        recyclerClasses.layoutManager = LinearLayoutManager(this)
     }
 
 
@@ -70,6 +82,26 @@ class StudentHomeActivity : AppCompatActivity() {
 
             integrator.initiateScan()
         }
+    }
+    private fun loadJoinedClasses(){
+
+        val studentId = "student123"   // later use FirebaseAuth UID
+
+        db.collection("students")
+            .document(studentId)
+            .collection("joinedClasses")
+            .get()
+            .addOnSuccessListener { result ->
+
+                val classList = mutableListOf<JoinedClass>()
+
+                for(doc in result){
+                    val classObj = doc.toObject(JoinedClass::class.java)
+                    classList.add(classObj)
+                }
+
+                recyclerClasses.adapter = ClassAdapter(classList)
+            }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 

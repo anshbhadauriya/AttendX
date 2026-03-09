@@ -1,5 +1,6 @@
 package com.example.attendx.Home
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -8,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.attendx.R
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import com.google.firebase.firestore.FirebaseFirestore
 
 class TeacherHomeActivity : AppCompatActivity() {
@@ -54,14 +56,15 @@ class TeacherHomeActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         StartClass.setOnClickListener {
-            Toast.makeText(this, "Opening QR Scanner...", Toast.LENGTH_SHORT).show()
-            val teacherName = intent.getStringExtra("teacher_name") ?: "John Doe"
-            val subjectCode= intent.getStringExtra("subject_code") ?: "MATH01"
-            val sessionId = System.currentTimeMillis().toString()  //unit time-> number of mili seconds passed since 1 Jan 1970
+            val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
+            val classCode = sharedPref.getString("class_code", "")
 
-            val qrData = "$teacherName|$subjectCode|$sessionId"
+            if(classCode.isNullOrEmpty()){
+                Toast.makeText(this,"Set class code first",Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-            generateQrCode(qrData)
+            showSessionDialog(classCode)
 
         }
 
@@ -97,8 +100,62 @@ class TeacherHomeActivity : AppCompatActivity() {
             Toast.makeText(this, "Class Code Updated", Toast.LENGTH_SHORT).show()
         }
 
+        ViewClass.setOnClickListener {
+
+            val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
+            val classCode = sharedPref.getString("class_code", "")
+
+            val intent = Intent(this, ViewClassActivity::class.java)
+            intent.putExtra("class_code", classCode)
+
+            startActivity(intent)
+        }
+
 
     }
+
+    private fun showSessionDialog(classCode: String) {
+
+        val durations = arrayOf("5 minutes","10 minutes","15 minutes")
+
+        AlertDialog.Builder(this)
+            .setTitle("Start Attendance Session")
+            .setItems(durations) { _, which ->
+
+                val durationMinutes = when(which){
+                    0 -> 5
+                    1 -> 10
+                    else -> 15
+                }
+
+                startSession(classCode, durationMinutes)
+            }
+            .show()
+    }
+    private fun startSession(classCode: String, duration: Int){
+
+        val sessionId = System.currentTimeMillis().toString()
+
+        val startTime = System.currentTimeMillis()
+        val endTime = startTime + duration * 60 * 1000
+
+        val sessionData = hashMapOf(
+            "startTime" to startTime,
+            "endTime" to endTime,
+            "duration" to duration
+        )
+
+        db.collection("classes")
+            .document(classCode)
+            .collection("sessions")
+            .document(sessionId)
+            .set(sessionData)
+
+        val qrData = "$classCode|$sessionId"
+
+        generateQrCode(qrData)
+    }
+
 
     private fun generateQrCode(data: String){
 

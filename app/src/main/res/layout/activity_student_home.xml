@@ -226,10 +226,18 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerClasses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="16dp"/>
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+
 
 
     <!-- Bottom Navigation -->

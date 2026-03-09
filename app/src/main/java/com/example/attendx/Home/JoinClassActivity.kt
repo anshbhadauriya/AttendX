@@ -50,7 +50,7 @@ class JoinClassActivity : AppCompatActivity() {
                     if(document.exists()){
 
                         val studentData = hashMapOf(
-                            "name" to "StudentName",
+                            "name" to "Ansh",
                             "joinedAt" to System.currentTimeMillis()
                         )
                         db.collection("classes")
