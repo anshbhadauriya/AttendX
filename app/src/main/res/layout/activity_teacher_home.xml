@@ -64,11 +64,21 @@
         android:id="@+id/enterCode"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:hint="Enter Class Code"
         android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@id/savecode"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/savecode" />
+
+    <Button
+        android:id="@+id/sessionAttendance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Session Attendance"
+        app:layout_constraintBottom_toTopOf="@+id/ViewClass"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,9 @@
         <activity
             android:name=".Home.JoinClassActivity"
             android:exported="false" />
+        <activity
+            android:name=".Session.SessionActivity"
+            android:exported="false"/>
 
         <activity
             android:name=".Home.ViewClassActivity"

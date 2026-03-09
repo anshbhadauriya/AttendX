@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.attendx.R
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
+import com.example.attendx.Session.SessionActivity
 import com.google.firebase.firestore.FirebaseFirestore
 
 class TeacherHomeActivity : AppCompatActivity() {
@@ -19,6 +20,9 @@ class TeacherHomeActivity : AppCompatActivity() {
     private lateinit var savecode: Button
 
     private lateinit var enterCode: EditText
+
+    private lateinit var sessionAttendance: Button
+
     private val db = FirebaseFirestore.getInstance()
 
 
@@ -51,6 +55,7 @@ class TeacherHomeActivity : AppCompatActivity() {
         ViewClass = findViewById(R.id.ViewClass)
         savecode = findViewById(R.id.savecode)
         enterCode = findViewById(R.id.enterCode)
+        sessionAttendance=findViewById(R.id.sessionAttendance)
 
     }
 
@@ -98,6 +103,25 @@ class TeacherHomeActivity : AppCompatActivity() {
                 .apply()
 
             Toast.makeText(this, "Class Code Updated", Toast.LENGTH_SHORT).show()
+        }
+
+        sessionAttendance.setOnClickListener {
+
+            val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
+
+            val classCode = sharedPref.getString("class_code", "")
+            val sessionId = sharedPref.getString("current_session", "")
+
+            if(sessionId.isNullOrEmpty()){
+                Toast.makeText(this,"No session running",Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val intent = Intent(this, SessionActivity::class.java)
+            intent.putExtra("classCode", classCode)
+            intent.putExtra("sessionId", sessionId)
+
+            startActivity(intent)
         }
 
         ViewClass.setOnClickListener {
@@ -154,6 +178,21 @@ class TeacherHomeActivity : AppCompatActivity() {
         val qrData = "$classCode|$sessionId"
 
         generateQrCode(qrData)
+
+        val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
+        sharedPref.edit()
+            .putString("current_session", sessionId)
+            .apply()
+
+        //session screen ke lie
+
+//        val intent = Intent(this, SessionActivity::class.java)
+//        intent.putExtra("classCode", classCode)
+//        intent.putExtra("sessionId", sessionId)
+//        startActivity(intent)
+
+
+
     }
 
 
