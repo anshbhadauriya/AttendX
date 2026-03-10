@@ -195,10 +195,10 @@ class RegisterActivity : AppCompatActivity() {
             userMap["course"] = etCourse.text.toString().trim()
         }
 
-        if(role=="teacher") {
+//        if(role=="teacher") {
 
 
-            db.collection("teachers")
+            db.collection("users")
                 .document(userId)
                 .set(userMap)
                 .addOnSuccessListener {
@@ -212,24 +212,24 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_LONG).show()
 
                 }
-        }
-        else{
-
-            db.collection("students")
-                .document(userId)
-                .set(userMap)
-                .addOnSuccessListener {
-
-                    Toast.makeText(this, "Account created successfully!", Toast.LENGTH_LONG).show()
-                    finish()
-
-                }
-                .addOnFailureListener {
-
-                    Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_LONG).show()
-
-                }
-
-        }
+//        }
+//        else{
+//
+//            db.collection("students")
+//                .document(userId)
+//                .set(userMap)
+//                .addOnSuccessListener {
+//
+//                    Toast.makeText(this, "Account created successfully!", Toast.LENGTH_LONG).show()
+//                    finish()
+//
+//                }
+//                .addOnFailureListener {
+//
+//                    Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_LONG).show()
+//
+//                }
+//
+//        }
     }
 }

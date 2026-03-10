@@ -2,7 +2,6 @@ package com.example.attendx.Home
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -22,10 +21,15 @@ data class JoinedClass(
 )
 
 class StudentHomeActivity : AppCompatActivity() {
-    private lateinit var joinClass : LinearLayout
-    private lateinit var recyclerClasses: RecyclerView
-    private val db = FirebaseFirestore.getInstance()
 
+    private lateinit var joinClass: LinearLayout
+    private lateinit var recyclerClasses: RecyclerView
+//    private lateinit var tvWelcome: TextView
+    private lateinit var tvStudentName: TextView
+    private lateinit var tvRollNo: TextView
+    private lateinit var ivAvatar: TextView
+
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,36 +42,48 @@ class StudentHomeActivity : AppCompatActivity() {
         setupBottomNav()
         setupJoinClassButton()
         loadJoinedClasses()
-
     }
 
-    private fun initialize(){
+    private fun initialize() {
+
         joinClass = findViewById(R.id.btnJoinClass)
         recyclerClasses = findViewById(R.id.recyclerClasses)
+//        tvWelcome = findViewById(R.id.tvWelcome)
+        tvStudentName = findViewById(R.id.tvStudentName)
+        tvRollNo = findViewById(R.id.tvRollNo)
+        ivAvatar = findViewById(R.id.ivAvatar)
 
         recyclerClasses.layoutManager = LinearLayoutManager(this)
     }
 
-
-
     private fun setupGreeting() {
+
         val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+
         val greeting = when {
             hour < 12 -> "Good Morning,"
             hour < 17 -> "Good Afternoon,"
             else -> "Good Evening,"
         }
+
         findViewById<TextView>(R.id.tvGreeting).text = greeting
 
-        // TODO: Replace with real student data from intent/SharedPrefs/DB
-        val studentName = intent.getStringExtra("student_name") ?: "John Doe"
-        val rollNo = intent.getStringExtra("roll_no") ?: "21CS042"
-        findViewById<TextView>(R.id.tvStudentName).text = "$studentName 👋"
-        findViewById<TextView>(R.id.tvRollNo).text = "Roll No: $rollNo"
-        findViewById<TextView>(R.id.ivAvatar).text = studentName.first().uppercase()
+        val sharedPref = getSharedPreferences("AttendXPrefs", MODE_PRIVATE)
+        val username = sharedPref.getString("username", "User")
+        val userId = sharedPref.getString("userId", "")
+
+        tvStudentName.text = "Welcome $username"
+
+        val studentName = username ?: "User"
+        val rollNo = userId ?: ""
+
+        tvStudentName.text = "$studentName 👋"
+        tvRollNo.text = "Roll No: $rollNo"
+
+        if (studentName.isNotEmpty()) {
+            ivAvatar.text = studentName.first().uppercase()
+        }
     }
-
-
 
     private fun setupScanButton() {
 
@@ -83,11 +99,13 @@ class StudentHomeActivity : AppCompatActivity() {
             integrator.initiateScan()
         }
     }
-    private fun loadJoinedClasses(){
 
-        val studentId = "student123"   // later use FirebaseAuth UID
+    private fun loadJoinedClasses() {
 
-        db.collection("students")
+        val sharedPref = getSharedPreferences("AttendXPrefs", MODE_PRIVATE)
+        val studentId = sharedPref.getString("userId", "") ?: ""
+
+        db.collection("users")
             .document(studentId)
             .collection("joinedClasses")
             .get()
@@ -95,14 +113,18 @@ class StudentHomeActivity : AppCompatActivity() {
 
                 val classList = mutableListOf<JoinedClass>()
 
-                for(doc in result){
+                for (doc in result) {
                     val classObj = doc.toObject(JoinedClass::class.java)
                     classList.add(classObj)
                 }
 
                 recyclerClasses.adapter = ClassAdapter(classList)
             }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to load classes", Toast.LENGTH_SHORT).show()
+            }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
@@ -124,6 +146,7 @@ class StudentHomeActivity : AppCompatActivity() {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
+
     private fun processQRCode(data: String) {
 
         val parts = data.split("|")
@@ -145,32 +168,40 @@ class StudentHomeActivity : AppCompatActivity() {
     }
 
     private fun setupJoinClassButton() {
+
         joinClass.setOnClickListener {
-            Toast.makeText(this, "Opening ...", Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(this, "Opening Join Class...", Toast.LENGTH_SHORT).show()
+
             val intent = Intent(this, JoinClassActivity::class.java)
             startActivity(intent)
         }
     }
 
-
     private fun setupBottomNav() {
+
         findViewById<BottomNavigationView>(R.id.bottomNav)
             .setOnItemSelectedListener { item ->
+
                 when (item.itemId) {
+
                     R.id.nav_home -> true
+
                     R.id.nav_classrooms -> {
                         Toast.makeText(this, "All Classrooms", Toast.LENGTH_SHORT).show()
                         true
                     }
+
                     R.id.nav_scan -> {
                         Toast.makeText(this, "Opening Scanner...", Toast.LENGTH_SHORT).show()
-                        // TODO: startActivity(Intent(this, QRScannerActivity::class.java))
                         true
                     }
+
                     R.id.nav_profile -> {
                         Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
                         true
                     }
+
                     else -> false
                 }
             }
