@@ -1,84 +1,247 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#0D1117"
     tools:context=".Home.TeacherHomeActivity">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Teacher View"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Subtle top accent line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#4F8EF7" />
 
-    <!-- QR CODE IMAGE -->
-    <ImageView
-        android:id="@+id/qrImage"
-        android:layout_width="250dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="371dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <!-- GENERATE QR BUTTON -->
-    <Button
-        android:id="@+id/StartClass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Start Session"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/qrImage" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="40dp">
 
-    <Button
-        android:id="@+id/ViewClass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="59dp"
-        android:text="View Class"
-        app:layout_constraintStart_toStartOf="@+id/StartClass"
-        app:layout_constraintTop_toBottomOf="@+id/StartClass" />
+            <!-- Header Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="36dp">
 
-    <Button
-        android:id="@+id/savecode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save Code"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ViewClass"
-        app:layout_constraintVertical_bias="0.296" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CLASSROOM"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.25"
+                    android:textColor="#4F8EF7"
+                    android:fontFamily="sans-serif-medium" />
 
-    <EditText
-        android:id="@+id/enterCode"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:hint="Enter Class Code"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/savecode" />
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Teacher View"
+                    android:textSize="34sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="sans-serif-light"
+                    android:letterSpacing="-0.02" />
 
-    <Button
-        android:id="@+id/sessionAttendance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Session Attendance"
-        app:layout_constraintBottom_toTopOf="@+id/ViewClass"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+                <!-- Divider -->
+                <View
+                    android:layout_width="48dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="14dp"
+                    android:background="#4F8EF7" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <!-- QR Code Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="#161B22"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="28dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SESSION QR CODE"
+                        android:textSize="10sp"
+                        android:letterSpacing="0.2"
+                        android:textColor="#8B949E"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="20dp" />
+
+                    <!-- QR Code container with border -->
+                    <FrameLayout
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:background="#0D1117">
+
+                        <ImageView
+                            android:id="@+id/qrImage"
+                            android:layout_width="196dp"
+                            android:layout_height="196dp"
+                            android:layout_gravity="center"
+                            android:scaleType="fitCenter" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Primary Action: Start Session -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/StartClass"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="12dp"
+                android:text="Start Session"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.05"
+                app:backgroundTint="#4F8EF7"
+                app:cornerRadius="14dp"
+                app:elevation="0dp"
+                app:icon="@drawable/ic_play_arrow"
+                app:iconGravity="textStart"
+                app:iconTint="#FFFFFF"
+                app:iconPadding="10dp" />
+
+            <!-- Secondary Actions Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/ViewClass"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:text="View Class"
+                    android:textSize="13sp"
+                    android:textColor="#C9D1D9"
+                    android:fontFamily="sans-serif-medium"
+                    app:backgroundTint="#161B22"
+                    app:strokeColor="#30363D"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="14dp"
+                    app:elevation="0dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sessionAttendance"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="Attendance"
+                    android:textSize="13sp"
+                    android:textColor="#C9D1D9"
+                    android:fontFamily="sans-serif-medium"
+                    app:backgroundTint="#161B22"
+                    app:strokeColor="#30363D"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="14dp"
+                    app:elevation="0dp" />
+
+            </LinearLayout>
+
+            <!-- Save Code Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/savecode"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="28dp"
+                android:text="Save Code"
+                android:textSize="14sp"
+                android:textColor="#4F8EF7"
+                android:fontFamily="sans-serif-medium"
+                app:backgroundTint="#0D1C35"
+                app:strokeColor="#1E3A6E"
+                app:strokeWidth="1dp"
+                app:cornerRadius="14dp"
+                app:elevation="0dp" />
+
+            <!-- Divider with label -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="20dp">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#21262D" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  OR JOIN WITH CODE  "
+                    android:textSize="10sp"
+                    android:letterSpacing="0.15"
+                    android:textColor="#8B949E"
+                    android:fontFamily="sans-serif-medium" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#21262D" />
+
+            </LinearLayout>
+
+            <!-- Enter Code Field -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Class Code"
+                app:boxBackgroundColor="#161B22"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="14dp"
+                app:boxCornerRadiusBottomStart="14dp"
+                app:boxCornerRadiusTopEnd="14dp"
+                app:boxCornerRadiusTopStart="14dp"
+                app:boxStrokeColor="#30363D"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="#8B949E">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/enterCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:inputType="text"
+                    android:textColor="#C9D1D9"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif"
+                    android:paddingHorizontal="16dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

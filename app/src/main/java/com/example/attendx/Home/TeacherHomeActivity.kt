@@ -15,35 +15,18 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class TeacherHomeActivity : AppCompatActivity() {
 
-    private lateinit var StartClass: Button
-    private lateinit var ViewClass: Button
+    private lateinit var startClass: Button
+    private lateinit var viewClass: Button
     private lateinit var savecode: Button
-
     private lateinit var enterCode: EditText
-
     private lateinit var sessionAttendance: Button
 
     private val db = FirebaseFirestore.getInstance()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_teacher_home)
-
-        val data = hashMapOf(
-            "project" to "AttendX"
-        )
-
-        db.collection("test")
-            .document("demo")
-            .set(data)
-//            .addOnSuccessListener {
-//                Toast.makeText(this, "Firestore Connected!", Toast.LENGTH_SHORT).show()
-//            }
-//            .addOnFailureListener { e ->
-//                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-//            }
 
         initialize()
         loadSavedCode()
@@ -51,31 +34,32 @@ class TeacherHomeActivity : AppCompatActivity() {
     }
 
     private fun initialize() {
-        StartClass = findViewById(R.id.StartClass)
-        ViewClass = findViewById(R.id.ViewClass)
+        startClass = findViewById(R.id.StartClass)
+        viewClass = findViewById(R.id.ViewClass)
         savecode = findViewById(R.id.savecode)
         enterCode = findViewById(R.id.enterCode)
-        sessionAttendance=findViewById(R.id.sessionAttendance)
-
+        sessionAttendance = findViewById(R.id.sessionAttendance)
     }
 
     private fun setupListeners() {
-        StartClass.setOnClickListener {
+        startClass.setOnClickListener {
             val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
             val classCode = sharedPref.getString("class_code", "")
 
-            if(classCode.isNullOrEmpty()){
-                Toast.makeText(this,"Set class code first",Toast.LENGTH_SHORT).show()
+            if (classCode.isNullOrEmpty()) {
+                Toast.makeText(this, "Set class code first", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             showSessionDialog(classCode)
-
         }
 
         savecode.setOnClickListener {
-
-            val newCode = enterCode.text.toString()
+            val newCode = enterCode.text.toString().trim()
+            if (newCode.isEmpty()) {
+                Toast.makeText(this, "Please enter a class code", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
             val oldCode = sharedPref.getString("class_code", "")
@@ -96,70 +80,67 @@ class TeacherHomeActivity : AppCompatActivity() {
             db.collection("classes")
                 .document(newCode)
                 .set(classData)
-
-            // Save locally
-            sharedPref.edit()
-                .putString("class_code", newCode)
-                .apply()
-
-            Toast.makeText(this, "Class Code Updated", Toast.LENGTH_SHORT).show()
+                .addOnSuccessListener {
+                    // Save locally only after success
+                    sharedPref.edit()
+                        .putString("class_code", newCode)
+                        .apply()
+                    Toast.makeText(this, "Class Code Updated", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Failed to update code: ${it.message}", Toast.LENGTH_SHORT).show()
+                }
         }
 
         sessionAttendance.setOnClickListener {
-
             val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
-
             val classCode = sharedPref.getString("class_code", "")
             val sessionId = sharedPref.getString("current_session", "")
 
-            if(sessionId.isNullOrEmpty()){
-                Toast.makeText(this,"No session running",Toast.LENGTH_SHORT).show()
+            if (sessionId.isNullOrEmpty()) {
+                Toast.makeText(this, "No session running", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val intent = Intent(this, SessionActivity::class.java)
             intent.putExtra("classCode", classCode)
             intent.putExtra("sessionId", sessionId)
-
             startActivity(intent)
         }
 
-        ViewClass.setOnClickListener {
-
+        viewClass.setOnClickListener {
             val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
             val classCode = sharedPref.getString("class_code", "")
 
+            if (classCode.isNullOrEmpty()) {
+                Toast.makeText(this, "Set class code first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val intent = Intent(this, ViewClassActivity::class.java)
             intent.putExtra("class_code", classCode)
-
             startActivity(intent)
         }
-
-
     }
 
     private fun showSessionDialog(classCode: String) {
-
-        val durations = arrayOf("5 minutes","10 minutes","15 minutes")
+        val durations = arrayOf("5 minutes", "10 minutes", "15 minutes")
 
         AlertDialog.Builder(this)
             .setTitle("Start Attendance Session")
             .setItems(durations) { _, which ->
-
-                val durationMinutes = when(which){
+                val durationMinutes = when (which) {
                     0 -> 5
                     1 -> 10
                     else -> 15
                 }
-
                 startSession(classCode, durationMinutes)
             }
             .show()
     }
-    private fun startSession(classCode: String, duration: Int){
 
+    private fun startSession(classCode: String, duration: Int) {
         val sessionId = System.currentTimeMillis().toString()
-
         val startTime = System.currentTimeMillis()
         val endTime = startTime + duration * 60 * 1000
 
@@ -174,63 +155,43 @@ class TeacherHomeActivity : AppCompatActivity() {
             .collection("sessions")
             .document(sessionId)
             .set(sessionData)
+            .addOnSuccessListener {
+                val qrData = "$classCode|$sessionId"
+                generateQrCode(qrData)
 
-        val qrData = "$classCode|$sessionId"
-
-        generateQrCode(qrData)
-
-        val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
-        sharedPref.edit()
-            .putString("current_session", sessionId)
-            .apply()
-
-        //session screen ke lie
-
-//        val intent = Intent(this, SessionActivity::class.java)
-//        intent.putExtra("classCode", classCode)
-//        intent.putExtra("sessionId", sessionId)
-//        startActivity(intent)
-
-
-
+                val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
+                sharedPref.edit()
+                    .putString("current_session", sessionId)
+                    .apply()
+                
+                Toast.makeText(this, "Session started", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to start session", Toast.LENGTH_SHORT).show()
+            }
     }
 
-
-    private fun generateQrCode(data: String){
-
+    private fun generateQrCode(data: String) {
         try {
-
             val writer = com.google.zxing.MultiFormatWriter()
-
             val matrix = writer.encode(
                 data,
                 com.google.zxing.BarcodeFormat.QR_CODE,
                 500,
                 500
             )
-
             val encoder = com.journeyapps.barcodescanner.BarcodeEncoder()
-
             val bitmap = encoder.createBitmap(matrix)
-
             val qrImage = findViewById<ImageView>(R.id.qrImage)
-
             qrImage.setImageBitmap(bitmap)
-
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
-
     }
 
     private fun loadSavedCode() {
-
         val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
-
         val savedCode = sharedPref.getString("class_code", "")
-
         enterCode.setText(savedCode)
-
     }
 }

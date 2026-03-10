@@ -1,4 +1,5 @@
 package com.example.attendx.Home
+
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -21,26 +22,28 @@ class ViewClassActivity : AppCompatActivity() {
         recyclerStudents = findViewById(R.id.recyclerStudents)
         recyclerStudents.layoutManager = LinearLayoutManager(this)
 
-        val classCode = intent.getStringExtra("class_code") ?: ""
+        val classCode = intent.getStringExtra("class_code")
+        
+        if (classCode.isNullOrEmpty()) {
+            Toast.makeText(this, "Error: Class code not found", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
         loadStudents(classCode)
     }
 
     private fun loadStudents(classCode: String){
-
         db.collection("classes")
             .document(classCode)
             .collection("students")
             .get()
             .addOnSuccessListener { result ->
-
                 val studentList = mutableListOf<Student>()
-
                 for(doc in result){
                     val student = doc.toObject(Student::class.java)
                     studentList.add(student)
                 }
-
                 recyclerStudents.adapter = StudentAdapter(studentList)
             }
             .addOnFailureListener {
