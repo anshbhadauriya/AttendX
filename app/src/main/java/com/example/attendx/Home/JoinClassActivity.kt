@@ -35,44 +35,55 @@ class JoinClassActivity : AppCompatActivity() {
          join_button=findViewById(R.id.join_button)
     }
     private fun joinClass() {
-        join_button.setOnClickListener {
-            val code = class_code.text.toString()
 
-            if(code.isEmpty()){
-                Toast.makeText(this,"Enter class code",Toast.LENGTH_SHORT).show()
+        join_button.setOnClickListener {
+
+            val code = class_code.text.toString().trim()
+
+            if (code.isEmpty()) {
+                Toast.makeText(this, "Enter class code", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            // get logged-in student data
+            val sessionPref = getSharedPreferences("AttendXPrefs", MODE_PRIVATE)
+            val studentName = sessionPref.getString("username", "Unknown")
+            val studentId = sessionPref.getString("userId", "")
+
             db.collection("classes")
                 .document(code)
                 .get()
                 .addOnSuccessListener { document ->
 
-                    if(document.exists()){
+                    if (document.exists()) {
 
                         val studentData = hashMapOf(
-                            "name" to "Ansh",
+                            "name" to studentName,
+                            "studentId" to studentId,
                             "joinedAt" to System.currentTimeMillis()
                         )
+
                         db.collection("classes")
                             .document(code)
                             .collection("students")
-                            .add(studentData)
+                            .document(studentId!!)   // prevents duplicates
+                            .set(studentData)
 
-                        Toast.makeText(this,"Class Found! Joined Successfully",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Joined Successfully!", Toast.LENGTH_SHORT).show()
+
+                        finish()
 
                     } else {
 
-                        Toast.makeText(this,"Invalid Class Code",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Invalid Class Code", Toast.LENGTH_SHORT).show()
 
                     }
-
                 }
                 .addOnFailureListener {
 
-                    Toast.makeText(this,"Error connecting to server",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Error connecting to server", Toast.LENGTH_SHORT).show()
 
                 }
-
         }
     }
 

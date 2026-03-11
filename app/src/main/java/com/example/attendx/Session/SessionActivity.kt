@@ -26,24 +26,19 @@ class SessionActivity : AppCompatActivity() {
         recyclerStudents = findViewById(R.id.recyclerStudents)
         recyclerStudents.layoutManager = LinearLayoutManager(this)
 
-//        qrImage = findViewById(R.id.qrImage)
-
         adapter = StudentAdapter(studentList)
         recyclerStudents.adapter = adapter
 
         val classCode = intent.getStringExtra("classCode") ?: ""
-        val sessionId = intent.getStringExtra("sessionId") ?: ""
 
-        listenToSession(classCode, sessionId)
+        loadStudents(classCode)
     }
 
-    private fun listenToSession(classCode: String, sessionId: String){
+    private fun loadStudents(classCode: String){
 
         db.collection("classes")
             .document(classCode)
-            .collection("sessions")
-            .document(sessionId)
-            .collection("attendees")
+            .collection("students")
             .addSnapshotListener { snapshot, _ ->
 
                 snapshot?.let {

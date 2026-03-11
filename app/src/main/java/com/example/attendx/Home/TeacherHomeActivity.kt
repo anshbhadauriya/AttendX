@@ -55,7 +55,9 @@ class TeacherHomeActivity : AppCompatActivity() {
         }
 
         savecode.setOnClickListener {
+
             val newCode = enterCode.text.toString().trim()
+
             if (newCode.isEmpty()) {
                 Toast.makeText(this, "Please enter a class code", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -64,31 +66,30 @@ class TeacherHomeActivity : AppCompatActivity() {
             val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
             val oldCode = sharedPref.getString("class_code", "")
 
-            // Delete old class if exists
+            val sessionPref = getSharedPreferences("AttendXPrefs", MODE_PRIVATE)
+            val teacherName = sessionPref.getString("username", "Unknown")
+
             if (!oldCode.isNullOrEmpty() && oldCode != newCode) {
                 db.collection("classes")
                     .document(oldCode)
                     .delete()
             }
 
-            // Save new class
             val classData = hashMapOf(
                 "classCode" to newCode,
-                "teacherName" to "Ansh"
+                "teacherName" to teacherName
             )
 
             db.collection("classes")
                 .document(newCode)
                 .set(classData)
                 .addOnSuccessListener {
-                    // Save locally only after success
+
                     sharedPref.edit()
                         .putString("class_code", newCode)
                         .apply()
+
                     Toast.makeText(this, "Class Code Updated", Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Failed to update code: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
         }
 
