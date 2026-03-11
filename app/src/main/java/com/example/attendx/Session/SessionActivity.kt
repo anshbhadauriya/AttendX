@@ -51,6 +51,7 @@ class SessionActivity : AppCompatActivity() {
                     }
 
                     adapter.notifyDataSetChanged()
+                    //commit krdo
                 }
             }
     }
