@@ -151,20 +151,65 @@ class StudentHomeActivity : AppCompatActivity() {
 
         val parts = data.split("|")
 
-        if (parts.size == 3) {
-
-            val teacher = parts[0]
-            val subject = parts[1]
-            val sessionId = parts[2]
-
-            Toast.makeText(
-                this,
-                "Teacher: $teacher\nSubject: $subject\nSession: $sessionId",
-                Toast.LENGTH_LONG
-            ).show()
-
-            // TODO: send to Firebase to mark attendance
+        if(parts.size != 2){
+            Toast.makeText(this,"Invalid QR Code",Toast.LENGTH_SHORT).show()
+            return
         }
+
+        val classCode = parts[0]
+        val sessionId = parts[1]
+
+        val sharedPref = getSharedPreferences("AttendXPrefs", MODE_PRIVATE)
+
+        val studentId = sharedPref.getString("userId","") ?: ""
+        val studentName = sharedPref.getString("username","") ?: ""
+
+        // Step 1: check if student joined class
+        db.collection("classes")
+            .document(classCode)
+            .collection("students")
+            .document(studentId)
+            .get()
+            .addOnSuccessListener { studentDoc ->
+
+                if(!studentDoc.exists()){
+                    Toast.makeText(this,"You are not enrolled in this class",Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
+                }
+
+                // Step 2: check session time
+                db.collection("classes")
+                    .document(classCode)
+                    .collection("sessions")
+                    .document(sessionId)
+                    .get()
+                    .addOnSuccessListener { sessionDoc ->
+
+                        val endTime = sessionDoc.getLong("endTime") ?: 0
+
+                        if(System.currentTimeMillis() > endTime){
+                            Toast.makeText(this,"Session expired",Toast.LENGTH_SHORT).show()
+                            return@addOnSuccessListener
+                        }
+
+                        // Step 3: mark attendance
+                        val attendanceData = hashMapOf(
+                            "name" to studentName,
+                            "studentId" to studentId,
+                            "joinedAt" to System.currentTimeMillis()
+                        )
+
+                        db.collection("classes")
+                            .document(classCode)
+                            .collection("sessions")
+                            .document(sessionId)
+                            .collection("attendees")
+                            .document(studentId)
+                            .set(attendanceData)
+
+                        Toast.makeText(this,"Attendance marked successfully",Toast.LENGTH_SHORT).show()
+                    }
+            }
     }
 
     private fun setupJoinClassButton() {

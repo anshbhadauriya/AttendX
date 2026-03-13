@@ -16,10 +16,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 class TeacherHomeActivity : AppCompatActivity() {
 
     private lateinit var startClass: Button
+
+    private lateinit var endSession: Button
     private lateinit var viewClass: Button
     private lateinit var savecode: Button
     private lateinit var enterCode: EditText
     private lateinit var sessionAttendance: Button
+
+    private lateinit var qrImage: ImageView
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -30,24 +34,34 @@ class TeacherHomeActivity : AppCompatActivity() {
 
         initialize()
         loadSavedCode()
+        updateSessionButton()
         setupListeners()
     }
 
     private fun initialize() {
         startClass = findViewById(R.id.StartClass)
+        endSession = findViewById(R.id.endSession)
         viewClass = findViewById(R.id.ViewClass)
         savecode = findViewById(R.id.savecode)
         enterCode = findViewById(R.id.enterCode)
+        qrImage = findViewById(R.id.qrImage)
         sessionAttendance = findViewById(R.id.sessionAttendance)
     }
 
     private fun setupListeners() {
         startClass.setOnClickListener {
+
             val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
             val classCode = sharedPref.getString("class_code", "")
+            val currentSession = sharedPref.getString("current_session", "")
 
             if (classCode.isNullOrEmpty()) {
                 Toast.makeText(this, "Set class code first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (!currentSession.isNullOrEmpty()) {
+                Toast.makeText(this, "A session is already running", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -122,25 +136,68 @@ class TeacherHomeActivity : AppCompatActivity() {
             intent.putExtra("class_code", classCode)
             startActivity(intent)
         }
+
+        endSession.setOnClickListener {
+
+            val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
+
+            sharedPref.edit()
+                .remove("current_session")
+                .apply()
+
+            val qrImage = findViewById<ImageView>(R.id.qrImage)
+            qrImage.setImageDrawable(null)
+
+            Toast.makeText(this,"Session ended",Toast.LENGTH_SHORT).show()
+
+            updateSessionButton()
+        }
     }
 
     private fun showSessionDialog(classCode: String) {
-        val durations = arrayOf("5 minutes", "10 minutes", "15 minutes")
+
+        val durations = arrayOf("2 minutes", "3 minutes", "5 minutes", "Custom...")
 
         AlertDialog.Builder(this)
             .setTitle("Start Attendance Session")
             .setItems(durations) { _, which ->
-                val durationMinutes = when (which) {
-                    0 -> 5
-                    1 -> 10
-                    else -> 15
+
+                when(which){
+
+                    0 -> startSession(classCode, 2)
+                    1 -> startSession(classCode, 3)
+                    2 -> startSession(classCode, 5)
+
+                    3 -> {
+
+                        val input = EditText(this)
+                        input.hint = "Enter minutes"
+                        input.inputType = android.text.InputType.TYPE_CLASS_NUMBER
+
+                        AlertDialog.Builder(this)
+                            .setTitle("Custom Duration")
+                            .setView(input)
+                            .setPositiveButton("Start") { _, _ ->
+
+                                val minutes = input.text.toString().toIntOrNull()
+
+                                if(minutes == null || minutes <= 0){
+                                    Toast.makeText(this,"Enter valid time",Toast.LENGTH_SHORT).show()
+                                }else{
+                                    startSession(classCode, minutes)
+                                }
+
+                            }
+                            .setNegativeButton("Cancel", null)
+                            .show()
+                    }
                 }
-                startSession(classCode, durationMinutes)
             }
             .show()
     }
 
     private fun startSession(classCode: String, duration: Int) {
+
         val sessionId = System.currentTimeMillis().toString()
         val startTime = System.currentTimeMillis()
         val endTime = startTime + duration * 60 * 1000
@@ -157,6 +214,7 @@ class TeacherHomeActivity : AppCompatActivity() {
             .document(sessionId)
             .set(sessionData)
             .addOnSuccessListener {
+
                 val qrData = "$classCode|$sessionId"
                 generateQrCode(qrData)
 
@@ -164,8 +222,26 @@ class TeacherHomeActivity : AppCompatActivity() {
                 sharedPref.edit()
                     .putString("current_session", sessionId)
                     .apply()
-                
+
+                updateSessionButton()
+
                 Toast.makeText(this, "Session started", Toast.LENGTH_SHORT).show()
+
+                // AUTO END SESSION AFTER TIME
+                android.os.Handler().postDelayed({
+
+                    sharedPref.edit()
+                        .remove("current_session")
+                        .apply()
+
+                    qrImage.setImageDrawable(null)
+
+                    updateSessionButton()
+
+                    Toast.makeText(this, "Session expired", Toast.LENGTH_SHORT).show()
+
+                }, duration * 60 * 1000L)
+
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed to start session", Toast.LENGTH_SHORT).show()
@@ -194,5 +270,16 @@ class TeacherHomeActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
         val savedCode = sharedPref.getString("class_code", "")
         enterCode.setText(savedCode)
+    }
+    private fun updateSessionButton() {
+
+        val sharedPref = getSharedPreferences("AttendX", MODE_PRIVATE)
+        val sessionId = sharedPref.getString("current_session", "")
+
+        if(sessionId.isNullOrEmpty()){
+            endSession.visibility = Button.GONE
+        }else{
+            endSession.visibility = Button.VISIBLE
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.attendx.Session
 
 import android.os.Bundle
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,8 +16,6 @@ class SessionActivity : AppCompatActivity() {
     private val studentList = mutableListOf<Student>()
     private lateinit var adapter: StudentAdapter
 
-    private lateinit var qrImage: ImageView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_session)
@@ -30,28 +27,30 @@ class SessionActivity : AppCompatActivity() {
         recyclerStudents.adapter = adapter
 
         val classCode = intent.getStringExtra("classCode") ?: ""
+        val sessionId = intent.getStringExtra("sessionId") ?: ""
 
-        loadStudents(classCode)
+        listenToAttendance(classCode, sessionId)
     }
 
-    private fun loadStudents(classCode: String){
+    private fun listenToAttendance(classCode: String, sessionId: String){
 
         db.collection("classes")
             .document(classCode)
-            .collection("students")
+            .collection("sessions")
+            .document(sessionId)
+            .collection("attendees")
             .addSnapshotListener { snapshot, _ ->
 
-                snapshot?.let {
+                if(snapshot != null){
 
                     studentList.clear()
 
-                    for(doc in it){
+                    for(doc in snapshot){
                         val student = doc.toObject(Student::class.java)
                         studentList.add(student)
                     }
 
                     adapter.notifyDataSetChanged()
-                    //commit krdo
                 }
             }
     }
