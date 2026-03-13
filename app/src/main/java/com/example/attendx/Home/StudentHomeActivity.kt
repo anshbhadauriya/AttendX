@@ -237,10 +237,10 @@ class StudentHomeActivity : AppCompatActivity() {
                         true
                     }
 
-                    R.id.nav_scan -> {
-                        Toast.makeText(this, "Opening Scanner...", Toast.LENGTH_SHORT).show()
-                        true
-                    }
+//                    R.id.nav_scan -> {
+//                        Toast.makeText(this, "Opening Scanner...", Toast.LENGTH_SHORT).show()
+//                        true
+//                    }
 
                     R.id.nav_profile -> {
                         Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()

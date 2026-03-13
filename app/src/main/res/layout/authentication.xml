@@ -7,20 +7,23 @@
     android:background="#F5F7FA">
 
     <!-- App Logo / Icon -->
+
+    <!-- App Title -->
+
     <ImageView
         android:id="@+id/ivLogo"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/ic_launcher_foreground"
-        android:background="@drawable/circle_bg"
+        android:background="@drawable/attendxxlogo"
         android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.12"
-        app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- App Title -->
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.115" />
+
     <TextView
         android:id="@+id/tvAppName"
         android:layout_width="wrap_content"
